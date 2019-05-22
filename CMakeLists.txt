@@ -38,3 +38,18 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
 )
+
+# Speed Controller For VRX Robot
+add_library(vrx_speed_controller_node src/vrx_speed_controller.cpp src/vrx_speed_controller_node.cpp)
+target_link_libraries(vrx_speed_controller_node ${catkin_LIBRARIES})
+
+# Install header files
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+)
+
+install(TARGETS vrx_speed_controller_node
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
