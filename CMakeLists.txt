@@ -53,3 +53,8 @@ install(TARGETS vrx_speed_controller_node
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
+
+foreach(dir launch)
+  install(DIRECTORY ${dir}/
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/${dir})
+endforeach(dir)
