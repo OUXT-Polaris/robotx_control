@@ -4,6 +4,7 @@
 // Headers in ROS
 #include <ros/ros.h>
 #include <geometry_msgs/TwistStamped.h>
+#include <usv_control_msgs/AzimuthThrusterCatamaranDriveStamped.h>
 
 // Headers in STL
 #include <mutex>
@@ -19,15 +20,19 @@ public:
     ~VrxSpeedController();
     void run();
 private:
-    const ros::NodeHandle nh;
-    const ros::NodeHandle pnh;
+    ros::NodeHandle nh_;
+    ros::NodeHandle pnh_;
     ros::Subscriber current_twist_sub_;
     ros::Subscriber target_twist_sub_;
+    ros::Publisher control_command_pub_;
     boost::optional<geometry_msgs::TwistStamped> current_twist_;
     boost::optional<geometry_msgs::TwistStamped> target_twist_;
     void currentTwistCallback(const geometry_msgs::TwistStamped::ConstPtr msg);
     void targetTwistCallback(const geometry_msgs::TwistStamped::ConstPtr msg);
     std::mutex mtx_;
+    std::string current_twist_topic_;
+    std::string target_twist_topic_;
+    std::string control_command_topic_;
     void publishCurrentCmd();
 };
 

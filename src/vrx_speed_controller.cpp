@@ -1,10 +1,16 @@
 // Headers in this package
 #include <vrx_control/vrx_speed_controller.h>
 
-VrxSpeedController::VrxSpeedController(ros::NodeHandle nh,ros::NodeHandle pnh):nh(nh),pnh(pnh)
+VrxSpeedController::VrxSpeedController(ros::NodeHandle nh,ros::NodeHandle pnh)
 {
-    target_twist_sub_ = pnh.subscribe("/target_twist",1,&VrxSpeedController::targetTwistCallback,this);
-    current_twist_sub_ = pnh.subscribe("/current_twist",1,&VrxSpeedController::currentTwistCallback,this);
+    nh_ = nh;
+    pnh_ = pnh;
+    pnh_.param<std::string>("target_twist_topic", target_twist_topic_, "/target_twist");
+    pnh_.param<std::string>("current_twist_topic", current_twist_topic_, "/current_twist");
+    pnh_.param<std::string>("control_command_topic", control_command_topic_, "/control_command");
+    control_command_pub_ = nh_.advertise<usv_control_msgs::AzimuthThrusterCatamaranDriveStamped>(control_command_topic_,1);
+    target_twist_sub_ = nh_.subscribe(target_twist_topic_,1,&VrxSpeedController::targetTwistCallback,this);
+    current_twist_sub_ = nh_.subscribe(current_twist_topic_,1,&VrxSpeedController::currentTwistCallback,this);
 }
 
 VrxSpeedController::~VrxSpeedController()

@@ -1,5 +1,15 @@
 <?xml version="1.0"?>
 <launch>
+    <arg name="control_command_topic" default="control_command"/>
+    <arg name="current_twist_topic" default="current_twist"/>
+    <arg name="target_twist_topic" default="target_twist"/>
+
     <node pkg="cog_publisher" type="cog_publisher_node" name="cog_publisher_node" output="screen" respawn="true" respawn_delay="0">
+    </node>
+
+    <node pkg="vrx_control" type="vrx_speed_controller_node" name="vrx_speed_controller_node" output="screen" respawn="true" respawn_delay="0">
+        <param name="control_command_topic" value="$(arg control_command_topic)"/>
+        <param name="current_twist_topic" value="$(arg current_twist_topic)"/>
+        <param name="target_twist_topic" value="$(arg target_twist_topic)"/>
     </node>
 </launch>
