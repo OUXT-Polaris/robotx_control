@@ -25,6 +25,7 @@ include_directories(
 # Speed Controller For VRX Robot
 add_executable(vrx_speed_controller_node src/vrx_speed_controller.cpp src/vrx_speed_controller_node.cpp)
 target_link_libraries(vrx_speed_controller_node ${catkin_LIBRARIES})
+add_dependencies(vrx_speed_controller_node usv_control_msgs_generate_messages_cpp)
 
 # Install header files
 install(DIRECTORY include/${PROJECT_NAME}/
