@@ -1,10 +1,11 @@
-#ifndef VRX_CONTROL_VRX_SPEED_CONTROLLER_H_INCLUDED
-#define VRX_CONTROL_VRX_SPEED_CONTROLLER_H_INCLUDED
+#ifndef ROBOTX_CONTROL_ROBOTX_DIFF_DRIVE_CONTROLLER_H_INCLUDED
+#define ROBOTX_CONTROL_ROBOTX_DIFF_DRIVE_CONTROLLER_H_INCLUDED
 
 // Headers in ROS
 #include <ros/ros.h>
 #include <geometry_msgs/TwistStamped.h>
 #include <usv_control_msgs/AzimuthThrusterCatamaranDriveStamped.h>
+#include <dynamic_reconfigure/server.h>
 
 // Headers in STL
 #include <mutex>
@@ -13,11 +14,14 @@
 #include <boost/optional.hpp>
 #include <boost/thread.hpp>
 
-class VrxSpeedController
+// Headers in this package
+#include <robotx_control/RobotXDiffDriveControllerConfig.h>
+
+class RobotXDiffDriveController
 {
 public:
-    VrxSpeedController(ros::NodeHandle nh,ros::NodeHandle pnh);
-    ~VrxSpeedController();
+    RobotXDiffDriveController(ros::NodeHandle nh,ros::NodeHandle pnh);
+    ~RobotXDiffDriveController();
     void run();
 private:
     ros::NodeHandle nh_;
@@ -34,6 +38,12 @@ private:
     std::string target_twist_topic_;
     std::string control_command_topic_;
     void publishCurrentCmd();
+    dynamic_reconfigure::Server<robotx_control::RobotXDiffDriveControllerConfig> dynaparam_server_;
+    dynamic_reconfigure::Server<robotx_control::RobotXDiffDriveControllerConfig>::CallbackType dynaparam_callback_func_;
+    void dynaparamCallback(robotx_control::RobotXDiffDriveControllerConfig &config, uint32_t level);
+    robotx_control::RobotXDiffDriveControllerConfig config_;
+    double error_integral_linear_;
+    double error_integral_angular_;
 };
 
-#endif  //VRX_CONTROL_VRX_SPEED_CONTROLLER_H_INCLUDED
+#endif  //ROBOTX_CONTROL_ROBOTX_DIFF_DRIVE_CONTROLLER_H_INCLUDED
