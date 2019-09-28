@@ -6,6 +6,7 @@
 #include <geometry_msgs/TwistStamped.h>
 #include <usv_control_msgs/AzimuthThrusterCatamaranDriveStamped.h>
 #include <dynamic_reconfigure/server.h>
+#include <std_msgs/Empty.h>
 
 // Headers in STL
 #include <mutex>
@@ -26,6 +27,7 @@ public:
 private:
     ros::NodeHandle nh_;
     ros::NodeHandle pnh_;
+    ros::Subscriber reset_command_sub_;
     ros::Subscriber current_twist_sub_;
     ros::Subscriber target_twist_sub_;
     ros::Publisher control_command_pub_;
@@ -33,17 +35,19 @@ private:
     boost::optional<geometry_msgs::TwistStamped> target_twist_;
     void currentTwistCallback(const geometry_msgs::TwistStamped::ConstPtr msg);
     void targetTwistCallback(const geometry_msgs::TwistStamped::ConstPtr msg);
+    void resetCommandCallcack(const std_msgs::Empty::ConstPtr msg);
     std::mutex mtx_;
     std::string current_twist_topic_;
     std::string target_twist_topic_;
     std::string control_command_topic_;
+    std::string reset_command_topic_;
     void publishCurrentCmd();
     dynamic_reconfigure::Server<robotx_control::RobotXDiffDriveControllerConfig> dynaparam_server_;
     dynamic_reconfigure::Server<robotx_control::RobotXDiffDriveControllerConfig>::CallbackType dynaparam_callback_func_;
     void dynaparamCallback(robotx_control::RobotXDiffDriveControllerConfig &config, uint32_t level);
     robotx_control::RobotXDiffDriveControllerConfig config_;
-    double error_integral_linear_;
-    double error_integral_angular_;
+    double error_integral_linear_velocity_;
+    double error_integral_angular_velocity_;
 };
 
 #endif  //ROBOTX_CONTROL_ROBOTX_DIFF_DRIVE_CONTROLLER_H_INCLUDED
